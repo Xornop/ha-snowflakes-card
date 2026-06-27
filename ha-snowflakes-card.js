@@ -100,7 +100,7 @@ class SnowflakesCard extends HTMLElement {
     const flakeHTML = flakes
       .map((f) => {
         const dur = (f.dur * speedMult).toFixed(1);
-        const delay = (-f.dur * speedMult * f.delay).toFixed(2);
+        const delay = (-20 * f.delay).toFixed(2);
         const op = (f.op * opacity).toFixed(2);
         return `<i style="left:${f.left}%;font-size:${f.size}px;--sx:${f.sx}px;--ex:${f.ex}px;animation-duration:${dur}s;animation-delay:${delay}s;opacity:${op};--rs:${f.rs}deg;--re:${f.re}deg;">❄</i>`;
       })
