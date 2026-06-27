@@ -6,6 +6,10 @@ A Lovelace custom card that renders animated snowflakes as a full-screen overlay
 
 ### Via HACS (recommended)
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xornop&repository=ha-snowflakes-card&category=Lovelace)
+
+or
+
 1. Open HACS → Frontend
 2. Click the three-dot menu → **Custom repositories**
 3. Add `Xornop/ha-snowflakes-card` with category **Lovelace**
