@@ -1,7 +1,23 @@
 # ❄ HA Snowflakes Card
 
-A Lovelace custom card that renders animated snowflakes as a full-screen overlay on your Home Assistant dashboard. Fully configurable: pick any color, control the count, speed, and opacity. Use multiple instances for layered effects (e.g. white flakes at night, green during the day).
-The snowflakes are individually rendered, making for some really good looking snow flakes instead of relying on the snowflake emoji or being a simple asterisk.
+A Lovelace custom card that renders animated snowflakes as a full-screen overlay on your Home Assistant dashboard. Every snowflake is individually defined with its own size, speed, drift, rotation, and opacity — no two fall exactly the same way.
+
+## Why not just use the built-in Winter Mode?
+
+Home Assistant 2025.12 introduced Winter Mode as a Labs feature (Settings → System → Labs), and it's a great addition. But it comes with some limitations: it's a per-user setting with no way to automate it, it has a known issue where snowflakes only show for admin users, and you get no control over appearance — no color, no intensity, nothing.
+
+HA Snowflakes Card fills that gap:
+
+| | Winter Mode (Labs) | HA Snowflakes Card |
+|---|---|---|
+| Color | White only | Any color or hex |
+| Per-dashboard control | ❌ | ✅ |
+| Automation / conditional | ❌ | ✅ via `conditional` card |
+| Works for all users | ⚠️ Admin only (known bug) | ✅ |
+| Snowflake count | Fixed | Configurable |
+| Multiple layers | ❌ | ✅ |
+
+Use it standalone, wrap it in a `conditional` card to tie it to an `input_boolean` or the sun's position, or stack two instances for a layered effect with different colors and speeds.
 
 ## Installation
 
