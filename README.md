@@ -4,7 +4,7 @@ A Lovelace custom card that renders animated snowflakes as a full-screen overlay
 
 ## Why not just use the built-in Winter Mode?
 
-Home Assistant 2025.12 introduced Winter Mode as a Labs feature (Settings → System → Labs), and it's a great addition. But it comes with some limitations: it's a per-user setting with no way to automate it, it has a known issue where snowflakes only show for admin users, and you get no control over appearance — no color, no intensity, nothing.
+Home Assistant 2025.12 introduced Winter Mode as a Labs feature (Settings → System → Labs), and it's a great addition. But it comes with some limitations: it's a per-user setting with no way to automate it, it has a known issue where snowflakes only show for admin users, and you get no control over appearance — no color, no intensity, nothing. In my opinion, it doesn't even look like a snowflake!
 
 HA Snowflakes Card fills that gap:
 
