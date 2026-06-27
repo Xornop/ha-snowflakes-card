@@ -1,12 +1,13 @@
 # ❄ HA Snowflakes Card
 
 A Lovelace custom card that renders animated snowflakes as a full-screen overlay on your Home Assistant dashboard. Fully configurable: pick any color, control the count, speed, and opacity. Use multiple instances for layered effects (e.g. white flakes at night, green during the day).
+The snowflakes are individually rendered, making for some really good looking snow flakes instead of relying on the snowflake emoji or being a simple asterisk.
 
 ## Installation
 
 ### Via HACS (recommended)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xornop&repository=ha-snowflakes-card&category=Lovelace)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xornop&repository=ha-snowflakes-card&category=plugin)
 
 or
 
@@ -94,7 +95,7 @@ cards:
 
 - The card respects `prefers-reduced-motion` — snowflakes are hidden for users who have enabled reduced motion in their OS settings.
 - The card takes up no space in the layout (height: 0). Place it anywhere in a grid view.
-- Wrapping it in a `conditional` card is the recommended way to control visibility.
+- Wrapping it in a `conditional` card is the recommended way to control visibility, for example use a time/date condition to only show the card during the holidays.
 
 ## License
 
