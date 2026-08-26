@@ -201,7 +201,7 @@ class HaSnowflakesCard extends HTMLElement {
       Array.isArray(config.leafColors) && config.leafColors.length === 3
         ? config.leafColors
         : ["#c9a227", "#a83232", "#d9812c"];
-    this._leafCount = Math.min(Math.max(parseInt(config.leafCount) || 30, 1), 50);
+    this._leafCount = Math.min(Math.max(parseInt(config.leafCount) || 20, 1), 50);
     this._leafOpacity = Math.min(Math.max(parseFloat(config.leafOpacity) ?? 1, 0), 1);
     // Optional custom leaf artwork: raw SVG markup (viewBox "0 0 100 100"),
     // e.g. a single <path d="..." fill="currentColor"/>. Falls back to the
@@ -214,7 +214,7 @@ class HaSnowflakesCard extends HTMLElement {
     // Rain
     this._rain = config.rain === true; // default false
     this._rainColor = config.rainColor || "#9aa5ad";
-    this._rainCount = Math.min(Math.max(parseInt(config.rainCount) || 40, 1), 80);
+    this._rainCount = Math.min(Math.max(parseInt(config.rainCount) || 30, 1), 80);
     this._rainOpacity = Math.min(Math.max(parseFloat(config.rainOpacity) ?? 1, 0), 1);
 
     this._render();
