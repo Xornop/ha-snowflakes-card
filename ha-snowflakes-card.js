@@ -230,7 +230,8 @@ class HaSnowflakesCard extends HTMLElement {
         const t = ((i * 0.61803398875) % 1 + f.d) % 1;
         const color = gradientColor(this._leafColors, t);
         const px = `${f.s * 1.6}px`; // leaf artwork reads a bit small vs. snowflake glyphs
-        return `<i class="leaf" style="left:${f.l}%; width:${px}; height:${px}; --start-x:0px; --end-x:${f.ex}px; animation-duration:${f.dur}s; animation-delay:calc(-20s * ${f.d}); opacity:${op}; --rotate-start:${f.rs}deg; --rotate-end:${f.re}deg; color:${color};"><svg viewBox="0 0 100 100" width="100%" height="100%">${this._leafShape}</svg></i>`;
+        const swayX = Math.round(f.ex * 2.6); // wider side-to-side sway than snow's drift
+        return `<i class="leaf" style="left:${f.l}%; width:${px}; height:${px}; --start-x:0px; --end-x:${swayX}px; animation-duration:${f.dur}s; animation-delay:calc(-20s * ${f.d}); opacity:${op}; --rotate-start:${f.rs}deg; --rotate-end:${f.re}deg; color:${color};"><svg viewBox="0 0 100 100" width="100%" height="100%">${this._leafShape}</svg></i>`;
       })
       .join("\n");
     return `<div class="layer leaves">${html}</div>`;
@@ -242,7 +243,7 @@ class HaSnowflakesCard extends HTMLElement {
     const html = drops
       .map((r) => {
         const op = (r.op * this._rainOpacity).toFixed(2);
-        return `<i class="drop" style="left:${r.l}%; width:${r.thick}px; height:${r.len}px; --end-x:${r.ex}px; animation-duration:${r.dur}s; animation-delay:calc(-1s * ${r.d}); opacity:${op}; background:${this._rainColor};"></i>`;
+        return `<i class="drop" style="left:${r.l}%; width:${r.thick}px; height:${r.len}px; --end-x:${r.ex}px; animation-duration:${r.dur}s; animation-delay:calc(-1 * ${r.dur}s * ${r.d}); opacity:${op}; background:${this._rainColor};"></i>`;
       })
       .join("\n");
     return `<div class="layer rain">${html}</div>`;
@@ -279,16 +280,20 @@ class HaSnowflakesCard extends HTMLElement {
           font-style: normal;
         }
 
-        /* Snow + leaves share the same wandering, zigzagging fall path. */
-        .flake,
-        .leaf {
+        /* Snow follows a gentle 4-point wander. */
+        .flake {
           animation-name: wander-fall;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
 
+        /* Leaves sway noticeably side-to-side as they fall, like real
+           dwarrelende blaadjes: more waypoints, eased motion. */
         .leaf {
           display: inline-block;
+          animation-name: leaf-fall;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
         }
 
         .leaf svg {
@@ -300,6 +305,18 @@ class HaSnowflakesCard extends HTMLElement {
           25%  { transform: translate(calc(var(--start-x) + calc(var(--end-x)/4)), 30vh) rotate(calc(var(--rotate-start) + var(--rotate-end)/4)); }
           50%  { transform: translate(calc(var(--start-x) - calc(var(--end-x)/4)), 60vh) rotate(calc(var(--rotate-start) + var(--rotate-end)/2)); }
           75%  { transform: translate(calc(var(--start-x) + calc(var(--end-x)/4)), 90vh) rotate(calc(var(--rotate-start) + 3*var(--rotate-end)/4)); }
+          100% { transform: translate(var(--end-x), 120vh) rotate(var(--rotate-end)); }
+        }
+
+        @keyframes leaf-fall {
+          0%   { transform: translate(var(--start-x), -10%) rotate(var(--rotate-start)); }
+          10%  { transform: translate(calc(var(--end-x) * 0.85), 6vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.1)); }
+          22%  { transform: translate(calc(var(--end-x) * -0.7), 18vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.22)); }
+          35%  { transform: translate(calc(var(--end-x) * 1), 34vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.35)); }
+          48%  { transform: translate(calc(var(--end-x) * -0.85), 47vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.48)); }
+          60%  { transform: translate(calc(var(--end-x) * 0.75), 60vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.6)); }
+          73%  { transform: translate(calc(var(--end-x) * -0.6), 74vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.73)); }
+          85%  { transform: translate(calc(var(--end-x) * 0.8), 88vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.85)); }
           100% { transform: translate(var(--end-x), 120vh) rotate(var(--rotate-end)); }
         }
 
