@@ -292,7 +292,7 @@ class HaSnowflakesCard extends HTMLElement {
         .leaf {
           display: inline-block;
           animation-name: leaf-fall;
-          animation-timing-function: ease-in-out;
+          animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
 
