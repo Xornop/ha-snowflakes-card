@@ -312,9 +312,18 @@ class HaSnowflakesCard extends HTMLElement {
 
         @keyframes leaf-fall {
           0%   { transform: translate(var(--start-x), -10%) rotate(var(--rotate-start)); }
-          25%  { transform: translate(calc(var(--start-x) + calc(var(--end-x)/4)), 30vh) rotate(calc(var(--rotate-start) + var(--rotate-end)/4)); }
-          50%  { transform: translate(calc(var(--start-x) - calc(var(--end-x)/4)), 60vh) rotate(calc(var(--rotate-start) + var(--rotate-end)/2)); }
-          75%  { transform: translate(calc(var(--start-x) + calc(var(--end-x)/4)), 90vh) rotate(calc(var(--rotate-start) + 3*var(--rotate-end)/4)); }
+          7%   { transform: translate(calc(var(--end-x) * 0.55), 4vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.07)); }
+          15%  { transform: translate(calc(var(--end-x) * -0.45), 11vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.15)); }
+          23%  { transform: translate(calc(var(--end-x) * 0.65), 19vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.23)); }
+          31%  { transform: translate(calc(var(--end-x) * -0.55), 28vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.31)); }
+          38%  { transform: translate(calc(var(--end-x) * 0.7), 36vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.38)); }
+          46%  { transform: translate(calc(var(--end-x) * -0.6), 45vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.46)); }
+          54%  { transform: translate(calc(var(--end-x) * 0.72), 53vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.54)); }
+          62%  { transform: translate(calc(var(--end-x) * -0.58), 62vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.62)); }
+          69%  { transform: translate(calc(var(--end-x) * 0.68), 70vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.69)); }
+          77%  { transform: translate(calc(var(--end-x) * -0.5), 79vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.77)); }
+          85%  { transform: translate(calc(var(--end-x) * 0.6), 88vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.85)); }
+          92%  { transform: translate(calc(var(--end-x) * -0.35), 96vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.92)); }
           100% { transform: translate(var(--end-x), 120vh) rotate(var(--rotate-end)); }
         }
 
