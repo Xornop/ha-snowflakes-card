@@ -126,7 +126,15 @@ const RAIN = [
   { l: 96, len: 21, thick: 2, ex:  16, dur: 0.8, d: 0.58, op: 0.45 },
 ];
 
-const LEAF_SHAPES = ["🍁", "🍂"];
+// Default leaf silhouette: simple almond shape with a center vein,
+// drawn with fill="currentColor" so the per-leaf gradient color actually
+// shows (unlike full-color emoji, which ignore CSS color).
+const DEFAULT_LEAF_SHAPE = `
+  <path d="M50 4 C22 18, 10 55, 50 96 C90 55, 78 18, 50 4 Z" fill="currentColor"/>
+  <path d="M50 10 L50 90" stroke="rgba(0,0,0,0.25)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 30 L34 20 M50 30 L66 20 M50 55 L30 45 M50 55 L70 45 M50 75 L36 68 M50 75 L64 68"
+        stroke="rgba(0,0,0,0.18)" stroke-width="2" stroke-linecap="round"/>
+`;
 
 function hexToRgb(hex) {
   let h = hex.trim();
@@ -178,6 +186,13 @@ class HaSnowflakesCard extends HTMLElement {
         : ["#c9a227", "#a83232", "#d9812c"];
     this._leafCount = Math.min(Math.max(parseInt(config.leafCount) || 30, 1), 50);
     this._leafOpacity = Math.min(Math.max(parseFloat(config.leafOpacity) ?? 1, 0), 1);
+    // Optional custom leaf artwork: raw SVG markup (viewBox "0 0 100 100"),
+    // e.g. a single <path d="..." fill="currentColor"/>. Falls back to the
+    // built-in leaf silhouette when not provided.
+    this._leafShape =
+      typeof config.leafShape === "string" && config.leafShape.trim()
+        ? config.leafShape
+        : DEFAULT_LEAF_SHAPE;
 
     // Rain
     this._rain = config.rain === true; // default false
@@ -214,8 +229,8 @@ class HaSnowflakesCard extends HTMLElement {
         // Deterministic-but-varied t per leaf (avoids re-randomizing on every re-render).
         const t = ((i * 0.61803398875) % 1 + f.d) % 1;
         const color = gradientColor(this._leafColors, t);
-        const shape = LEAF_SHAPES[i % LEAF_SHAPES.length];
-        return `<i class="leaf" style="left:${f.l}%; font-size:${f.s}px; --start-x:0px; --end-x:${f.ex}px; animation-duration:${f.dur}s; animation-delay:calc(-20s * ${f.d}); opacity:${op}; --rotate-start:${f.rs}deg; --rotate-end:${f.re}deg; color:${color};">${shape}</i>`;
+        const px = `${f.s * 1.6}px`; // leaf artwork reads a bit small vs. snowflake glyphs
+        return `<i class="leaf" style="left:${f.l}%; width:${px}; height:${px}; --start-x:0px; --end-x:${f.ex}px; animation-duration:${f.dur}s; animation-delay:calc(-20s * ${f.d}); opacity:${op}; --rotate-start:${f.rs}deg; --rotate-end:${f.re}deg; color:${color};"><svg viewBox="0 0 100 100" width="100%" height="100%">${this._leafShape}</svg></i>`;
       })
       .join("\n");
     return `<div class="layer leaves">${html}</div>`;
@@ -270,6 +285,14 @@ class HaSnowflakesCard extends HTMLElement {
           animation-name: wander-fall;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
+        }
+
+        .leaf {
+          display: inline-block;
+        }
+
+        .leaf svg {
+          display: block;
         }
 
         @keyframes wander-fall {
