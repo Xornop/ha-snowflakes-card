@@ -220,22 +220,22 @@ class HaSnowflakesCard extends HTMLElement {
     return `<div class="layer snow">${html}</div>`;
   }
 
-  // Builds a "shark fin" / sawtooth sway-and-fall path for one leaf: a
-  // slow, smooth glide to one side, then a quick smooth snap back — not a
-  // symmetric sine wave. That asymmetry is what reads as a real leaf
-  // catching the wind and flipping, rather than gently oscillating.
+  // Builds a symmetric side-to-side sway-and-fall path for one leaf: equal
+  // time and equal easing swinging each direction (a rounded triangle
+  // wave), so it rocks back and forth at a consistent pace instead of
+  // snapping back quickly on one side.
   _leafFallKeyframes(name, amplitudePx, cycles, phase, rotateStart, rotateEnd) {
     const STEPS = 40;
-    const GLIDE_FRACTION = 0.82; // portion of each cycle spent on the slow glide
+    const GLIDE_FRACTION = 0.5; // equal time swinging each direction
     const smoothstep = (x) => x * x * (3 - 2 * x);
 
     const finX = (cyclePos) => {
       if (cyclePos < GLIDE_FRACTION) {
         const local = cyclePos / GLIDE_FRACTION;
-        return amplitudePx * (2 * smoothstep(local) - 1); // -amp -> +amp, slow
+        return amplitudePx * (2 * smoothstep(local) - 1); // -amp -> +amp
       }
       const local = (cyclePos - GLIDE_FRACTION) / (1 - GLIDE_FRACTION);
-      return amplitudePx * (1 - 2 * smoothstep(local)); // +amp -> -amp, quick
+      return amplitudePx * (1 - 2 * smoothstep(local)); // +amp -> -amp
     };
 
     let rules = "";
@@ -325,11 +325,11 @@ class HaSnowflakesCard extends HTMLElement {
           animation-iteration-count: infinite;
         }
 
-        /* Leaves: each leaf gets its own per-instance shark-fin sway
-           keyframes (generated in JS, see _leafFallKeyframes) — a slow
-           glide to one side and a quick snap back, not a symmetric
-           oscillation. The curve itself already eases, so linear timing
-           here is enough — no extra CSS easing needed. */
+        /* Leaves: each leaf gets its own per-instance symmetric sway
+           keyframes (generated in JS, see _leafFallKeyframes) — equal
+           speed swinging each direction, like a rounded triangle wave,
+           rather than a fast snap on one side. The curve itself already
+           eases at each turn, so linear timing here is enough. */
         .leaf {
           display: inline-block;
           animation-timing-function: linear;
