@@ -220,9 +220,28 @@ class HaSnowflakesCard extends HTMLElement {
     return `<div class="layer snow">${html}</div>`;
   }
 
+  // Builds a smooth sinusoidal sway-and-fall path for one leaf: dense
+  // sampling of a real sine curve (not a few straight-line waypoints), so
+  // it reads as a natural curved sway instead of a zigzag. Rotation is
+  // interpolated linearly across the same steps.
+  _leafFallKeyframes(name, amplitudePx, cycles, phase, rotateStart, rotateEnd) {
+    const STEPS = 24;
+    let rules = "";
+    for (let i = 0; i <= STEPS; i++) {
+      const t = i / STEPS;
+      const pct = (t * 100).toFixed(2);
+      const x = (amplitudePx * Math.sin(2 * Math.PI * cycles * t + phase)).toFixed(1);
+      const y = t === 0 ? "-10%" : `${(-10 + t * 130).toFixed(1)}vh`;
+      const rot = (rotateStart + t * (rotateEnd - rotateStart)).toFixed(1);
+      rules += `${pct}% { transform: translate(${x}px, ${y}) rotate(${rot}deg); }\n`;
+    }
+    return `@keyframes ${name} {\n${rules}}`;
+  }
+
   _renderLeavesLayer() {
     if (!this._leaves) return "";
     const leaves = FLAKES.slice(0, this._leafCount);
+    let keyframesCss = "";
     const html = leaves
       .map((f, i) => {
         const op = (f.op * this._leafOpacity).toFixed(2);
@@ -230,11 +249,17 @@ class HaSnowflakesCard extends HTMLElement {
         const t = ((i * 0.61803398875) % 1 + f.d) % 1;
         const color = gradientColor(this._leafColors, t);
         const px = `${f.s * 1.6}px`; // leaf artwork reads a bit small vs. snowflake glyphs
-        const swayX = Math.round(f.ex * 2.6); // wider side-to-side sway than snow's drift
-        return `<i class="leaf" style="left:${f.l}%; width:${px}; height:${px}; --start-x:0px; --end-x:${swayX}px; animation-duration:${f.dur}s; animation-delay:calc(-20s * ${f.d}); opacity:${op}; --rotate-start:${f.rs}deg; --rotate-end:${f.re}deg; color:${color};"><svg viewBox="0 0 100 100" width="100%" height="100%">${this._leafShape}</svg></i>`;
+
+        const amplitude = Math.abs(f.ex) * 2.2; // side-to-side sway width
+        const cycles = 2.3 + (i % 5) * 0.35; // full left-right swings during the fall
+        const phase = f.d * 2 * Math.PI; // desyncs leaves from each other
+        const animName = `leaf-sway-${i}`;
+        keyframesCss += this._leafFallKeyframes(animName, amplitude, cycles, phase, f.rs, f.re) + "\n";
+
+        return `<i class="leaf" style="left:${f.l}%; width:${px}; height:${px}; animation-name:${animName}; animation-duration:${f.dur}s; animation-delay:calc(-20s * ${f.d}); opacity:${op}; color:${color};"><svg viewBox="0 0 100 100" width="100%" height="100%">${this._leafShape}</svg></i>`;
       })
       .join("\n");
-    return `<div class="layer leaves">${html}</div>`;
+    return `<style>${keyframesCss}</style><div class="layer leaves">${html}</div>`;
   }
 
   _renderRainLayer() {
@@ -287,14 +312,14 @@ class HaSnowflakesCard extends HTMLElement {
           animation-iteration-count: infinite;
         }
 
-        /* Leaves sway noticeably side-to-side as they fall, like real
-           dwarrelende blaadjes: more waypoints, eased motion. */
+        /* Leaves: each leaf gets its own per-instance sine-wave keyframes
+           (generated in JS, see _leafFallKeyframes), so the sway is a
+           smooth curve rather than straight segments between a few
+           waypoints. The curve itself naturally eases at each swing's
+           peak, so linear timing here is enough — no extra CSS easing. */
         .leaf {
           display: inline-block;
-          animation-name: leaf-fall;
-          /* Eases like ease-in-out but is "afgeknepen" before the curve
-             goes fully flat, so it doesn't hang at each swing's peak. */
-          animation-timing-function: cubic-bezier(0.33, 0.1, 0.67, 0.9);
+          animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
 
@@ -307,23 +332,6 @@ class HaSnowflakesCard extends HTMLElement {
           25%  { transform: translate(calc(var(--start-x) + calc(var(--end-x)/4)), 30vh) rotate(calc(var(--rotate-start) + var(--rotate-end)/4)); }
           50%  { transform: translate(calc(var(--start-x) - calc(var(--end-x)/4)), 60vh) rotate(calc(var(--rotate-start) + var(--rotate-end)/2)); }
           75%  { transform: translate(calc(var(--start-x) + calc(var(--end-x)/4)), 90vh) rotate(calc(var(--rotate-start) + 3*var(--rotate-end)/4)); }
-          100% { transform: translate(var(--end-x), 120vh) rotate(var(--rotate-end)); }
-        }
-
-        @keyframes leaf-fall {
-          0%   { transform: translate(var(--start-x), -10%) rotate(var(--rotate-start)); }
-          7%   { transform: translate(calc(var(--end-x) * 0.55), 4vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.07)); }
-          15%  { transform: translate(calc(var(--end-x) * -0.45), 11vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.15)); }
-          23%  { transform: translate(calc(var(--end-x) * 0.65), 19vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.23)); }
-          31%  { transform: translate(calc(var(--end-x) * -0.55), 28vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.31)); }
-          38%  { transform: translate(calc(var(--end-x) * 0.7), 36vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.38)); }
-          46%  { transform: translate(calc(var(--end-x) * -0.6), 45vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.46)); }
-          54%  { transform: translate(calc(var(--end-x) * 0.72), 53vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.54)); }
-          62%  { transform: translate(calc(var(--end-x) * -0.58), 62vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.62)); }
-          69%  { transform: translate(calc(var(--end-x) * 0.68), 70vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.69)); }
-          77%  { transform: translate(calc(var(--end-x) * -0.5), 79vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.77)); }
-          85%  { transform: translate(calc(var(--end-x) * 0.6), 88vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.85)); }
-          92%  { transform: translate(calc(var(--end-x) * -0.35), 96vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.92)); }
           100% { transform: translate(var(--end-x), 120vh) rotate(var(--rotate-end)); }
         }
 
