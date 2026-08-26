@@ -3,10 +3,10 @@
  * Lovelace custom card — animated weather overlay (snow / leaves / rain).
  *
  * Config:
- *   snowflakes {boolean} show snow layer (default: true)
- *   color      {string}  snowflake CSS color or hex (default: "#ffffff")
- *   count      {number}  snowflake count, 1–50 (default: 50)
- *   opacity    {number}  snowflake opacity multiplier, 0–1 (default: 1)
+ *   snow    {boolean} show snow layer (default: true) — legacy alias: snowflakes
+ *   color   {string}  snowflake CSS color or hex (default: "#ffffff")
+ *   snowCount {number} snowflake count, 1–50 (default: 50) — legacy alias: count
+ *   opacity {number}  snowflake opacity multiplier, 0–1 (default: 1)
  *
  *   leaves      {boolean}     show autumn leaves layer (default: false)
  *   leafColors  {string[3]}   3 CSS colors/hex used as gradient stops for random leaf colors
@@ -153,6 +153,20 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
+// Picks `count` items from `arr`, spread evenly across the full left%
+// range instead of just taking the first N (which — since the source
+// arrays are roughly sorted by left position — would otherwise bunch
+// everything into the left portion of the screen as count goes down).
+function spreadSample(arr, count) {
+  const sorted = [...arr].sort((a, b) => a.l - b.l);
+  if (count >= sorted.length) return sorted;
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    result.push(sorted[Math.floor((i * sorted.length) / count)]);
+  }
+  return result;
+}
+
 // Interpolates across a 3-stop gradient (stop0 -> stop1 -> stop2) at t in [0,1].
 function gradientColor(colors, t) {
   const [c0, c1, c2] = colors.map(hexToRgb);
@@ -173,9 +187,12 @@ class HaSnowflakesCard extends HTMLElement {
 
   setConfig(config) {
     // Snow
-    this._snowflakes = config.snowflakes !== false; // default true
+    this._snow = (config.snow !== undefined ? config.snow : config.snowflakes) !== false; // default true
     this._color = config.color || "#ffffff";
-    this._count = Math.min(Math.max(parseInt(config.count) || 50, 1), 50);
+    this._snowCount = Math.min(
+      Math.max(parseInt(config.snowCount ?? config.count) || 50, 1),
+      50
+    );
     this._opacity = Math.min(Math.max(parseFloat(config.opacity) ?? 1, 0), 1);
 
     // Leaves
@@ -209,8 +226,8 @@ class HaSnowflakesCard extends HTMLElement {
   }
 
   _renderSnowLayer() {
-    if (!this._snowflakes) return "";
-    const flakes = FLAKES.slice(0, this._count);
+    if (!this._snow) return "";
+    const flakes = spreadSample(FLAKES, this._snowCount);
     const html = flakes
       .map((f) => {
         const op = (f.op * this._opacity).toFixed(2);
@@ -253,7 +270,7 @@ class HaSnowflakesCard extends HTMLElement {
 
   _renderLeavesLayer() {
     if (!this._leaves) return "";
-    const leaves = FLAKES.slice(0, this._leafCount);
+    const leaves = spreadSample(FLAKES, this._leafCount);
     let keyframesCss = "";
     const html = leaves
       .map((f, i) => {
@@ -277,7 +294,7 @@ class HaSnowflakesCard extends HTMLElement {
 
   _renderRainLayer() {
     if (!this._rain) return "";
-    const drops = RAIN.slice(0, this._rainCount);
+    const drops = spreadSample(RAIN, this._rainCount);
     const html = drops
       .map((r) => {
         const op = (r.op * this._rainOpacity).toFixed(2);
