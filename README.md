@@ -5,6 +5,7 @@ A Lovelace custom card that renders animated snowflakes as a full-screen overlay
 ## Why not just use the built-in Winter Mode?
 
 Home Assistant 2025.12 introduced Winter Mode as a Labs feature (Settings → System → Labs), and it's a great addition. But it comes with some limitations: it's a per-user setting with no way to automate it, it has a known issue where snowflakes only show for admin users, and you get no control over appearance — no color, no intensity, nothing. In my opinion, it doesn't even look like a snowflake!
+Furthermore, HA Snowflakes Card now also offers rain and falling leaves, expanding the capabilities far beyond the built-in Winter Mode!
 
 HA Snowflakes Card fills that gap:
 
@@ -16,6 +17,8 @@ HA Snowflakes Card fills that gap:
 | Works for all users | ⚠️ Admin only (known bug) | ✅ |
 | Snowflake count | Fixed | Configurable |
 | Multiple layers | ❌ | ✅ |
+| Rain option | ❌ | ✅ |
+| Leaves option | ❌ | ✅ |
 
 Use it standalone, wrap it in a `conditional` card to tie it to an `input_boolean` or the sun's position, or stack two instances for a layered effect with different colors and speeds.
 
@@ -51,12 +54,21 @@ color: "#ffffff"
 
 ### All options
 
-| Option    | Type   | Default     | Description                                      |
-|-----------|--------|-------------|--------------------------------------------------|
-| `color`   | string | `"#ffffff"` | Snowflake color — any CSS color or hex value     |
-| `count`   | number | `50`        | Number of snowflakes (max 100)                   |
-| `speed`   | string | `"normal"`  | Fall speed: `slow`, `normal`, or `fast`          |
-| `opacity` | number | `1`         | Global opacity multiplier (0–1)                  |
+| Option        | Type    | Default     | Description                                      |
+|---------------|---------|-------------|--------------------------------------------------|
+| `snow`        | boolean | `true`      | Snowflakes enabled (true/false)                  |
+| `color`       | string  | `"#ffffff"` | Snowflake color — any CSS color or hex value     |
+| `count`       | number  | `50`        | Number of snowflakes (max 100)                   |
+| `speed`       | string  | `"normal"`  | Fall speed: `slow`, `normal`, or `fast`          |
+| `opacity`     | number  | `1`         | Global opacity multiplier (0–1)                  |
+| `rain`        | boolean | `false`      | Rain enabled (true/false)                       |
+| `rainColor`   | string  | `"#9aa5ad"` | Rain color — any CSS color or hex value          |
+| `rainCount`   | number  | `30`        | Amount of rain (max 80)                          |
+| `rainOpacity` | number  | `1`         | Global opacity multiplier (0–1)                  |
+| `leaves`      | boolean | `false`      | Rain enabled (true/false)                       |
+| `leafColor`   | string[3]  | `["#c9a227", "#a83232", "#d9812c"]` | Rain color — any CSS color or hex value          |
+| `leafCount`   | number  | `20`        | Amount of leaves (max 50)                          |
+| `leafOpacity` | number  | `1`         | Global opacity multiplier (0–1)                  |
 
 ### Examples
 
