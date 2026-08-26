@@ -292,7 +292,7 @@ class HaSnowflakesCard extends HTMLElement {
         .leaf {
           display: inline-block;
           animation-name: leaf-fall;
-          animation-timing-function: linear;
+          animation-timing-function: ease-in-out;
           animation-iteration-count: infinite;
         }
 
@@ -310,13 +310,18 @@ class HaSnowflakesCard extends HTMLElement {
 
         @keyframes leaf-fall {
           0%   { transform: translate(var(--start-x), -10%) rotate(var(--rotate-start)); }
-          10%  { transform: translate(calc(var(--end-x) * 0.85), 6vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.1)); }
-          22%  { transform: translate(calc(var(--end-x) * -0.7), 18vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.22)); }
-          35%  { transform: translate(calc(var(--end-x) * 1), 34vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.35)); }
-          48%  { transform: translate(calc(var(--end-x) * -0.85), 47vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.48)); }
-          60%  { transform: translate(calc(var(--end-x) * 0.75), 60vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.6)); }
-          73%  { transform: translate(calc(var(--end-x) * -0.6), 74vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.73)); }
-          85%  { transform: translate(calc(var(--end-x) * 0.8), 88vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.85)); }
+          7%   { transform: translate(calc(var(--end-x) * 0.55), 4vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.07)); }
+          15%  { transform: translate(calc(var(--end-x) * -0.45), 11vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.15)); }
+          23%  { transform: translate(calc(var(--end-x) * 0.65), 19vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.23)); }
+          31%  { transform: translate(calc(var(--end-x) * -0.55), 28vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.31)); }
+          38%  { transform: translate(calc(var(--end-x) * 0.7), 36vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.38)); }
+          46%  { transform: translate(calc(var(--end-x) * -0.6), 45vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.46)); }
+          54%  { transform: translate(calc(var(--end-x) * 0.72), 53vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.54)); }
+          62%  { transform: translate(calc(var(--end-x) * -0.58), 62vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.62)); }
+          69%  { transform: translate(calc(var(--end-x) * 0.68), 70vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.69)); }
+          77%  { transform: translate(calc(var(--end-x) * -0.5), 79vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.77)); }
+          85%  { transform: translate(calc(var(--end-x) * 0.6), 88vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.85)); }
+          92%  { transform: translate(calc(var(--end-x) * -0.35), 96vh) rotate(calc(var(--rotate-start) + var(--rotate-end) * 0.92)); }
           100% { transform: translate(var(--end-x), 120vh) rotate(var(--rotate-end)); }
         }
 
